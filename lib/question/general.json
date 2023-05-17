@@ -1,0 +1,10 @@
+{
+    "en": [
+      {"question": "What is your name?", "answer": "My name is John."},
+      {"question": "Where are you from?", "answer": "I'm from the United States."}
+    ],
+    "pt": [
+      {"question": "Qual é o seu nome?", "answer": "Meu nome é João."},
+      {"question": "De onde você é?", "answer": "Eu sou dos Estados Unidos."}
+    ]
+  }
