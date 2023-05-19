@@ -4,7 +4,17 @@
       {"question": "Where are you from?", "answer": "I'm from the United States."}
     ],
     "pt": [
-      {"question": "Qual é o seu nome?", "answer": "Meu nome é João."},
-      {"question": "De onde você é?", "answer": "Eu sou dos Estados Unidos."}
+      {"question": "Na Alemanha, Oktoberfest é celebrado com que bebida?", "answer": "Cerveja"},
+      {"question": "Os russos mais famosos por qual bebida alcoólica? ", "answer": "Vodka"},
+      {"question": "Como se chama o tipo de cerveja feita de cacto?", "answer": "Pulque"},
+      {"question": "Fico cada vez mais molhado, quanto mais você seca. O que sou eu?", "answer": "Toalha"},
+      {"question": "Qual jogo esportivo foi jogado na lua?", "answer": "Golfe"},
+      {"question": "Qual é a bebida mais consumida no mundo?", "answer": "Chá"},
+      {"question": "Que tipo de carne as pessoas consomem mais no mundo?", "answer": "Carne de frango"},
+      {"question": "Qual é o nome do mordomo do Batman?", "answer": "Alfred"},
+      {"question": "Qual é a bebida alcoólica japonesa mais famosa?", "answer": "Sake"},
+      {"question": "Qual país tem o maior consumo de cerveja do mundo?", "answer": "China"},
+      {"question": "Qual o menor país do mundo?", "answer": " Vaticano"},
+      {"question": "Quantas casas decimais tem o número pi?", "answer":"Infinitas"}
     ]
   }

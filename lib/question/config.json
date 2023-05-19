@@ -1,0 +1,8 @@
+{
+    "en": [
+      {"buttoncorrect": "Correct", "buttonincorrect": "Incorrect"}
+    ],
+    "pt": [
+      {"buttoncorrect": "Correto", "buttonincorrect": "Incorreto"}
+    ]
+  }
