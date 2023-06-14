@@ -41,10 +41,10 @@ class Question {
 }
 
 class Config {
-  final String buttoncorrect;
-  final String buttonincorrect;
+  final String btcorrect;
+  final String btincorrect;
 
-  Config(this.buttoncorrect, this.buttonincorrect);
+  Config(this.btcorrect, this.btincorrect);
 }
 
 class Flashcard {
@@ -72,6 +72,8 @@ class _FlashcardAppState extends State<FlashcardApp> {
   bool showAnswer = false;
   int _selectedIndex = 0;
   late Config buttonConfig;
+  String currentLanguage = 'pt';
+  late Map<String, List<Question>> questionsMap;
 
   int correctCount = 0;
   int incorrectCount = 0;
@@ -83,19 +85,36 @@ class _FlashcardAppState extends State<FlashcardApp> {
   void initState() {
     super.initState();
     loadQuestions();
+    loadConfig();
     _startTimer();
   }
 
   Future<void> loadQuestions() async {
     final jsonContent =
         await rootBundle.loadString('lib/question/general.json');
-    final questionsMap = json.decode(jsonContent) as Map<String, dynamic>;
-    final questions = (questionsMap['pt'] as List<dynamic>)
-        .map((questionMap) =>
-            Question(questionMap['question'], questionMap['answer']))
-        .toList();
+    final jsonMap = json.decode(jsonContent) as Map<String, dynamic>;
+    questionsMap = jsonMap.map((key, value) {
+      final questions = (value as List<dynamic>).map((questionMap) {
+        if (questionMap is Map<String, dynamic>) {
+          return Question(questionMap['question'], questionMap['answer']);
+        } else {
+          throw ArgumentError('Invalid question format');
+        }
+      }).toList();
+      return MapEntry(key, questions);
+    });
+
     setState(() {
-      flashcard = Flashcard(questions);
+      flashcard = Flashcard(questionsMap[currentLanguage]!);
+    });
+  }
+
+  Future<void> loadConfig() async {
+    final jsonContent = await rootBundle.loadString('lib/question/config.json');
+    final configMap = json.decode(jsonContent) as Map<String, dynamic>;
+    final config = configMap[currentLanguage];
+    setState(() {
+      buttonConfig = Config(config[0]['btcorrect'], config[0]['btincorrect']);
     });
   }
 
@@ -121,7 +140,6 @@ class _FlashcardAppState extends State<FlashcardApp> {
             flashcard!.currentIndex == flashcard!.questions.length - 1;
 
         if (isLastQuestion) {
-          // Exibe a mensagem de fim e reinicia os contadores
           showDialog(
             context: context,
             builder: (_) => AlertDialog(
@@ -140,12 +158,9 @@ class _FlashcardAppState extends State<FlashcardApp> {
                     Navigator.pop(context); // Fecha o diálogo
                     _secondsRemaining = 20;
                     setState(() {
-                      flashcard!.currentIndex =
-                          0; // Reinicia o índice das perguntas
-                      correctCount =
-                          0; // Reinicia o contador de respostas corretas
-                      incorrectCount =
-                          0; // Reinicia o contador de respostas incorretas
+                      flashcard!.currentIndex = 0;
+                      correctCount = 0;
+                      incorrectCount = 0;
                     });
                   },
                   child: const Text('Reiniciar'),
@@ -178,8 +193,8 @@ class _FlashcardAppState extends State<FlashcardApp> {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        _secondsRemaining = 20;
                         Navigator.pop(context); // Fecha o diálogo
+                        _secondsRemaining = 20;
                       },
                       child: const Text('Continuar'),
                     ),
@@ -196,7 +211,7 @@ class _FlashcardAppState extends State<FlashcardApp> {
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: const Text('Você acertou 2 perguntas!'),
+                  title: const Text('Você acertou 3 perguntas!'),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -208,8 +223,8 @@ class _FlashcardAppState extends State<FlashcardApp> {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        _secondsRemaining = 20;
                         Navigator.pop(context); // Fecha o diálogo
+                        _secondsRemaining = 20;
                       },
                       child: const Text('Continuar'),
                     ),
@@ -224,6 +239,17 @@ class _FlashcardAppState extends State<FlashcardApp> {
     });
   }
 
+  void _toggleLanguage() {
+    setState(() {
+      _secondsRemaining = 20;
+      currentLanguage = currentLanguage == 'pt' ? 'en' : 'pt';
+    });
+
+    setState(() {
+      flashcard = Flashcard(questionsMap[currentLanguage]!);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,11 +257,20 @@ class _FlashcardAppState extends State<FlashcardApp> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Correct: $correctCount'),
+            // Text('Correct: $correctCount'),
+            // Text('$_secondsRemaining s'),
+            // Text('Incorrect: $incorrectCount'),
+            Text('${buttonConfig.btcorrect}: $correctCount'),
             Text('$_secondsRemaining s'),
-            Text('Incorrect: $incorrectCount'),
+            Text('${buttonConfig.btincorrect}: $incorrectCount'),
           ],
         ),
+        actions: [
+          IconButton(
+            onPressed: () => _toggleLanguage(),
+            icon: const Icon(Icons.language),
+          ),
+        ],
       ),
       body: flashcard != null
           ? SingleChildScrollView(

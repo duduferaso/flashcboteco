@@ -1,7 +1,17 @@
 {
     "en": [
-      {"question": "What is your name?", "answer": "My name is John."},
-      {"question": "Where are you from?", "answer": "I'm from the United States."}
+      {"question": "In Germany, Oktoberfest is celebrated with what beverage?", "answer": "Beer"},
+      {"question": "What alcoholic beverage are Russians most famous for?", "answer": "Vodka"},
+      {"question": "What is the type of beer made from cactus called?", "answer": "Pulque"},
+      {"question": "I get wetter the more you dry. What am I?", "answer": "Towel"},
+      {"question": "Which sport game was played on the moon?", "answer": "Golf"},
+      {"question": "What is the most consumed beverage in the world?", "answer": "Tea"},
+      {"question": "Which type of meat is consumed the most in the world?", "answer": "Chicken"},
+      {"question": "What is the name of Batman's butler?", "answer": "Alfred"},
+      {"question": "What is the most famous Japanese alcoholic beverage?", "answer": "Sake"},
+      {"question": "Which country has the highest beer consumption in the world?", "answer": "China"},
+      {"question": "What is the smallest country in the world?", "answer": "Vatican"},
+      {"question": "How many decimal places does the number pi have?", "answer": "Infinite"}
     ],
     "pt": [
       {"question": "Na Alemanha, Oktoberfest é celebrado com que bebida?", "answer": "Cerveja"},
