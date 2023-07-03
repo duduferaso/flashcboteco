@@ -1,8 +1,17 @@
 {
     "en": [
-      {"btcorrect": "Correct", "btincorrect": "Incorrect"}
+      {"btcorrect": "Correct", "btincorrect": "Incorrect", "btnanswercorrect": "Correct answers:", "btnanswerincorrect": "Incorrect answers:",
+       "btnfim":"End of questions", "btnrestart":"Restart", "btncontinue":"Continue", "btncorrectthree":"You got 3 questions right!",
+        "btnincorrectthree":"You got 3 questions wrong!", "btncheers":"Everyone should drink, cheers!","btnsmarty":"Smarty, cheers!", "btnplay":"Play"}
     ],
     "pt": [
-      {"btcorrect": "Correto", "btincorrect": "Incorreto"}
+      {"btcorrect": "Correto", "btincorrect": "Incorreto", "btnanswercorrect": "Respostar corretas:", "btnanswerincorrect": "Respostas incorretas:",
+       "btnfim":"Fim das perguntas", "btnrestart":"Reiniciar", "btncontinue":"Continuar", "btncorrectthree":"Você acertou 3 perguntas!",
+       "btnincorrectthree":"Você errou 3 perguntas!", "btncheers":"Todos devem beber, saúde!","btnsmarty":"Espertinho, saúde!", "btnplay":"Jogar"}
+    ],
+    "es": [
+      {"btcorrect": "Correcto", "btincorrect": "Incorrecto", "btnanswercorrect": "Respuestas correctas:", "btnanswerincorrect": "Respuestas incorrectas:",
+       "btnfim":"Fin de las preguntas", "btnrestart":"Reanudar", "btncontinue":"Continuar", "btncorrectthree":"¡Tienes 3 preguntas correctas!",
+       "btnincorrectthree":"¡Te equivocaste en 3 preguntas!", "btncheers":"Todo el mundo debería beber, ¡salud!","btnsmarty":"¡Sabelotodo, salud!", "btnplay":"Jugar"}
     ]
   }

@@ -59,7 +59,9 @@ flutter:
   assets:
     - lib/question/general.json
     - lib/question/config.json
-    - lib/img/tequila.png
+    - lib/img/carta.png
+    - lib/img/carta_fund.png
+    - lib/img/fundo_ini.png
     - lib/img/fund.png
     - lib/sounds/errou.mp3
     - lib/gif/ah.gif

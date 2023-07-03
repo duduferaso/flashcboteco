@@ -26,5 +26,19 @@
       {"question": "Qual país tem o maior consumo de cerveja do mundo?", "answer": "China"},
       {"question": "Qual o menor país do mundo?", "answer": " Vaticano"},
       {"question": "Quantas casas decimais tem o número pi?", "answer":"Infinitas"}
+    ],
+    "es":[
+      {"question": "¿En Alemania, con qué bebida se celebra el Oktoberfest?", "answer": "Cerveza"},
+      {"question": "¿Por qué bebida alcohólica son más famosos los rusos?", "answer": "Vodka"},
+      {"question": "¿Cómo se llama el tipo de cerveza hecha de cactus?", "answer": "Pulque"},
+      {"question": "Me vuelvo cada vez más mojado mientras más me secas. ¿Qué soy?", "answer": "Toalla"},
+      {"question": "¿Qué deporte se jugó en la luna?", "answer": "Golf"},
+      {"question": "¿Cuál es la bebida más consumida en el mundo?", "answer": "Té"},
+      {"question": "¿Qué tipo de carne es más consumida en el mundo?", "answer": "Carne de pollo"},
+      {"question": "¿Cuál es el nombre del mayordomo de Batman?", "answer": "Alfred"},
+      {"question": "¿Cuál es la bebida alcohólica japonesa más famosa?", "answer": "Sake"},
+      {"question": "¿Qué país tiene el mayor consumo de cerveza en el mundo?", "answer": "China"},
+      {"question": "¿Cuál es el país más pequeño del mundo?", "answer": "Vaticano"},
+      {"question": "¿Cuántos decimales tiene el número pi?", "answer":"Infinitos"}
     ]
   }

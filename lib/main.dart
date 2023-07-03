@@ -14,11 +14,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = MaterialColor(
+      0xFF2E7D32, // Valor da cor primária
+      <int, Color>{
+        50: Color(0xFFE8F5E9),
+        100: Color(0xFFC8E6C9),
+        200: Color(0xFFA5D6A7),
+        300: Color(0xFF81C784),
+        400: Color(0xFF66BB6A),
+        500: Color(0xFF4CAF50),
+        600: Color(0xFF43A047),
+        700: Color(0xFF388E3C),
+        800: Color(0xFF2E7D32),
+        900: Color(0xFF1B5E20),
+      },
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'FlapCard',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: primaryColor,
       ),
       home: const FlashcardApp(),
       localizationsDelegates: [
@@ -28,6 +43,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: [
         const Locale('en', ''),
         const Locale('pt', ''),
+        const Locale('es', ''),
       ],
     );
   }
@@ -43,8 +59,30 @@ class Question {
 class Config {
   final String btcorrect;
   final String btincorrect;
+  final String btnanswercorrect;
+  final String btnanswerincorrect;
+  final String btnfim;
+  final String btnrestart;
+  final String btncontinue;
+  final String btnincorrectthree;
+  final String btncorrectthree;
+  final String btncheers;
+  final String btnsmarty;
+  final String btnplay;
 
-  Config(this.btcorrect, this.btincorrect);
+  Config(
+      this.btcorrect,
+      this.btincorrect,
+      this.btnanswercorrect,
+      this.btnanswerincorrect,
+      this.btnfim,
+      this.btnrestart,
+      this.btncontinue,
+      this.btncorrectthree,
+      this.btnincorrectthree,
+      this.btncheers,
+      this.btnsmarty,
+      this.btnplay);
 }
 
 class Flashcard {
@@ -71,7 +109,19 @@ class _FlashcardAppState extends State<FlashcardApp> {
   Flashcard? flashcard;
   bool showAnswer = false;
   int _selectedIndex = 0;
-  late Config buttonConfig;
+  late Config buttonConfig = Config(
+      'Correto',
+      'Incorreto',
+      'Respostar corretas:',
+      'Respostas incorretas:',
+      'Fim das perguntas',
+      'Reiniciar',
+      'Continuar',
+      'Você acertou 3 perguntas!',
+      'Você errou 3 perguntas!',
+      'Todos devem beber, saúde',
+      'Espertinho, saúde!',
+      'Jogar');
   String currentLanguage = 'pt';
   late Map<String, List<Question>> questionsMap;
 
@@ -84,9 +134,69 @@ class _FlashcardAppState extends State<FlashcardApp> {
   @override
   void initState() {
     super.initState();
-    loadQuestions();
     loadConfig();
-    _startTimer();
+    loadQuestions();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 0),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.asset(
+                    'lib/img/fundo_ini.png',
+                    width: 300,
+                    height: 300,
+                  ),
+                  Positioned(
+                    bottom: 30,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _secondsRemaining = 20;
+                        _startTimer();
+                      },
+                      child: Text('Jogar'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 25,
+                        ),
+                        textStyle: const TextStyle(fontSize: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        primary: Colors.green[800], // Cor do botão
+                        onPrimary: Colors.white, // Cor do texto do botão
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 2,
+                    right: 2,
+                    child: IconButton(
+                      onPressed: () {
+                        _toggleLanguage();
+                      },
+                      icon: const Icon(
+                        Icons.language,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          contentPadding: const EdgeInsets.all(20),
+        ),
+      );
+    });
   }
 
   Future<void> loadQuestions() async {
@@ -114,7 +224,19 @@ class _FlashcardAppState extends State<FlashcardApp> {
     final configMap = json.decode(jsonContent) as Map<String, dynamic>;
     final config = configMap[currentLanguage];
     setState(() {
-      buttonConfig = Config(config[0]['btcorrect'], config[0]['btincorrect']);
+      buttonConfig = Config(
+          config[0]['btcorrect'],
+          config[0]['btincorrect'],
+          config[0]['btnanswercorrect'],
+          config[0]['btnanswerincorrect'],
+          config[0]['btnfim'],
+          config[0]['btnrestart'],
+          config[0]['btncontinue'],
+          config[0]['btncorrectthree'],
+          config[0]['btnincorrectthree'],
+          config[0]['btncheers'],
+          config[0]['btnsmarty'],
+          config[0]['btnplay']);
     });
   }
 
@@ -143,12 +265,14 @@ class _FlashcardAppState extends State<FlashcardApp> {
           showDialog(
             context: context,
             builder: (_) => AlertDialog(
-              title: const Text('Fim das perguntas'),
+              title: buttonConfig != null
+                  ? Text('${buttonConfig.btnfim}')
+                  : const Text(''),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Respostas corretas: $correctCount'),
-                  Text('Respostas incorretas: $incorrectCount'),
+                  Text('${buttonConfig.btnanswercorrect}: $correctCount'),
+                  Text('${buttonConfig.btnanswerincorrect}: $incorrectCount'),
                   Image.asset('lib/gif/need.gif')
                 ],
               ),
@@ -156,36 +280,39 @@ class _FlashcardAppState extends State<FlashcardApp> {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context); // Fecha o diálogo
-                    _secondsRemaining = 20;
                     setState(() {
                       flashcard!.currentIndex = 0;
                       correctCount = 0;
                       incorrectCount = 0;
                     });
+                    _secondsRemaining = 20;
                   },
-                  child: const Text('Reiniciar'),
+                  child: buttonConfig != null
+                      ? Text('${buttonConfig.btnrestart}')
+                      : const Text(''),
                 ),
               ],
             ),
           );
         } else {
-          // Incrementa os contadores de acordo com o índice selecionado
           if (index == 0) {
             flashcard!.nextQuestion();
             showAnswer = false;
             _secondsRemaining = 20;
-            incorrectCount++; // Incrementa o contador de respostas incorretas
-
+            incorrectCount++;
             if (incorrectCount % 3 == 0 && incorrectCount > 0) {
-              // Exibe a mensagem de erro após 3 respostas incorretas
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: const Text('Você errou 3 perguntas!'),
+                  title: buttonConfig != null
+                      ? Text('${buttonConfig.btnincorrectthree}')
+                      : const Text(''),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Todos devem beber, saúde!'),
+                      buttonConfig != null
+                          ? Text('${buttonConfig.btncheers}')
+                          : const Text(''),
                       const SizedBox(height: 40),
                       Image.asset('lib/gif/ah.gif'),
                     ],
@@ -193,10 +320,12 @@ class _FlashcardAppState extends State<FlashcardApp> {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Fecha o diálogo
+                        Navigator.pop(context);
                         _secondsRemaining = 20;
                       },
-                      child: const Text('Continuar'),
+                      child: buttonConfig != null
+                          ? Text('${buttonConfig.btncontinue}')
+                          : const Text(''),
                     ),
                   ],
                 ),
@@ -206,16 +335,20 @@ class _FlashcardAppState extends State<FlashcardApp> {
             flashcard!.nextQuestion();
             showAnswer = false;
             _secondsRemaining = 20;
-            correctCount++; // Incrementa o contador de respostas corretas
+            correctCount++;
             if (correctCount % 3 == 0 && correctCount > 0) {
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: const Text('Você acertou 3 perguntas!'),
+                  title: buttonConfig != null
+                      ? Text('${buttonConfig.btncorrectthree}')
+                      : const Text(''),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Espertinho, saúde!'),
+                      buttonConfig != null
+                          ? Text('${buttonConfig.btnsmarty}')
+                          : const Text(''),
                       const SizedBox(height: 40),
                       Image.asset('lib/gif/graveto.gif'),
                     ],
@@ -223,10 +356,12 @@ class _FlashcardAppState extends State<FlashcardApp> {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Fecha o diálogo
                         _secondsRemaining = 20;
+                        Navigator.pop(context);
                       },
-                      child: const Text('Continuar'),
+                      child: buttonConfig != null
+                          ? Text('${buttonConfig.btncontinue}')
+                          : const Text(''),
                     ),
                   ],
                 ),
@@ -235,6 +370,9 @@ class _FlashcardAppState extends State<FlashcardApp> {
           }
         }
       }
+      if (_timer == null || !_timer.isActive) {
+        _startTimer();
+      }
       _selectedIndex = index;
     });
   }
@@ -242,7 +380,10 @@ class _FlashcardAppState extends State<FlashcardApp> {
   void _toggleLanguage() {
     setState(() {
       _secondsRemaining = 20;
-      currentLanguage = currentLanguage == 'pt' ? 'en' : 'pt';
+      currentLanguage = currentLanguage == 'pt'
+          ? 'en'
+          : (currentLanguage == 'en' ? 'es' : 'pt');
+      loadConfig();
     });
 
     setState(() {
@@ -257,9 +398,6 @@ class _FlashcardAppState extends State<FlashcardApp> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Text('Correct: $correctCount'),
-            // Text('$_secondsRemaining s'),
-            // Text('Incorrect: $incorrectCount'),
             Text('${buttonConfig.btcorrect}: $correctCount'),
             Text('$_secondsRemaining s'),
             Text('${buttonConfig.btincorrect}: $incorrectCount'),
@@ -273,69 +411,81 @@ class _FlashcardAppState extends State<FlashcardApp> {
         ],
       ),
       body: flashcard != null
-          ? SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height,
-                ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () => setState(() => showAnswer = true),
-                        child: Container(
-                          width: 600,
-                          height: 500,
+          ? GestureDetector(
+              onTap: () => setState(() => showAnswer = true),
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 500,
+                          height: 600,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.green,
-                                spreadRadius: 5,
-                                blurRadius: 10,
-                                offset: Offset(0, 3),
-                              )
-                            ],
+                            image: DecorationImage(
+                              image: AssetImage(
+                                showAnswer
+                                    ? 'lib/img/carta.png'
+                                    : 'lib/img/carta_fund.png',
+                              ),
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                          child: Center(
-                            child: Text(
-                              showAnswer
-                                  ? flashcard!.currentQuestion.answer
-                                  : flashcard!.currentQuestion.question,
-                              style: const TextStyle(fontSize: 20),
+                          child: Padding(
+                            padding: const EdgeInsets.all(130.0),
+                            child: Center(
+                              child: Text(
+                                showAnswer
+                                    ? flashcard!.currentQuestion.answer
+                                    : flashcard!.currentQuestion.question,
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black, // Cor da sombra
+                                      offset: Offset(3, 4),
+                                      blurRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      if (showAnswer)
-                        Text(
-                          flashcard!.currentQuestion.question,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                    ],
+                        const SizedBox(height: 20),
+                        if (showAnswer)
+                          Text(
+                            flashcard!.currentQuestion.question,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             )
           : const Center(child: CircularProgressIndicator()),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.green,
+        color: Colors.green[900],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
               onPressed: () => _onItemTapped(0),
               icon: Icon(Icons.close),
-              color: Colors.white,
+              color: Colors.red,
             ),
             IconButton(
               onPressed: () => _onItemTapped(1),
               icon: Icon(Icons.check),
-              color: Colors.white,
+              color: Colors.green,
             ),
           ],
         ),
